@@ -64,7 +64,7 @@ const App = () => {
     formData.append("file", audio);
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/transcribe", formData, {
+      const response = await axios.post("https://speech-to-text-server-jos6.onrender.com/transcribe", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setTranscript(response.data.transcript);
