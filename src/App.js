@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { Container, Button, Typography, Paper, IconButton } from "@mui/material";
-import { CloudUpload, Mic, Stop } from "@mui/icons-material";
+import { CloudUpload, Mic } from "@mui/icons-material";
 
 const App = () => {
   const [audio, setAudio] = useState(null);
@@ -64,7 +64,7 @@ const App = () => {
     formData.append("file", audio);
 
     try {
-      const response = await axios.post("https://speech-to-text-server-jos6.onrender.com/transcribe", formData, {
+      const response = await axios.post("http://127.0.0.1:5000/transcribe", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setTranscript(response.data.transcript);
