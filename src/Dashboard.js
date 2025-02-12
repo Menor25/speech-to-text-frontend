@@ -42,12 +42,10 @@ const Dashboard = () => {
     String(review.rating || "").includes(search)
   );
 
-  // Toggle drawer for mobile menu
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  // Navigation menu items
   const menuItems = [
     { text: "Dashboard", link: "/" },
     { text: "Transcription", link: "/transcription" }
@@ -55,10 +53,19 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* ✅ Responsive Navbar */}
-      <AppBar position="static">
+      {/* ✅ AppBar: Only show on desktop (sm and above) */}
+      <AppBar position="static" sx={{ display: { xs: "none", sm: "block" } }}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu" sx={{ display: { sm: "none" } }} onClick={handleDrawerToggle}>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Dashboard
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      {/* ✅ Mobile Menu: Only show on small screens (xs) */}
+      <AppBar position="static" sx={{ display: { xs: "block", sm: "none" } }}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerToggle}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
