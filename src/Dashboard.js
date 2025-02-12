@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import {
   Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  TextField, Button, IconButton, AppBar, Toolbar, Typography, Box, Drawer, List, ListItem, ListItemText
+  TextField, Button, IconButton, AppBar, Toolbar, Typography, Box, Drawer,
+  List, ListItem, ListItemText
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const BACKEND_URL = "https://speech-to-text-server-jos6.onrender.com";
 
 const Dashboard = () => {
   const [reviews, setReviews] = useState([]);
   const [search, setSearch] = useState("");
-  const [mobileOpen, setMobileOpen] = useState(false); // For mobile menu toggle
+  const [mobileOpen, setMobileOpen] = useState(false);
+  
+  // ✅ Detect screen size
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   useEffect(() => {
     fetchReviews();
@@ -30,7 +35,7 @@ const Dashboard = () => {
   const handleDelete = async (index) => {
     try {
       await axios.delete(`${BACKEND_URL}/delete-review/${index}`);
-      fetchReviews(); // Refresh list after deletion
+      fetchReviews();
     } catch (error) {
       console.error("Error deleting review:", error);
     }
@@ -53,26 +58,27 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* ✅ AppBar: Only show on desktop (sm and above) */}
-      <AppBar position="static" sx={{ display: { xs: "none", sm: "block" } }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
-      {/* ✅ Mobile Menu: Only show on small screens (xs) */}
-      <AppBar position="static" sx={{ display: { xs: "block", sm: "none" } }}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerToggle}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      {/* ✅ Only one navigation bar will appear at a time */}
+      {isMobile ? (
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerToggle}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>
+              Dashboard
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      ) : (
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>
+              Dashboard
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      )}
 
       {/* ✅ Sidebar Drawer for Mobile */}
       <Drawer anchor="left" open={mobileOpen} onClose={handleDrawerToggle}>
