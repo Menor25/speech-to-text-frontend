@@ -8,6 +8,7 @@ import { CloudUpload, Mic } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 const BACKEND_URL = "https://speech-to-text-server-jos6.onrender.com";
+// const BACKEND_URL = "http://127.0.0.1:5000";
 
 const Transcription = () => {
   const [audio, setAudio] = useState(null);
@@ -29,31 +30,59 @@ const Transcription = () => {
     }
   };
 
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
-      setRecording(true);
-      setAudioName("Recording in progress...");
+  // const startRecording = async () => {
+  //   try {
+  //     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  //     const mediaRecorder = new MediaRecorder(stream);
+  //     mediaRecorderRef.current = mediaRecorder;
+  //     audioChunksRef.current = [];
+  //     setRecording(true);
+  //     setAudioName("Recording in progress...");
 
-      mediaRecorder.ondataavailable = (event) => {
+  //     mediaRecorder.ondataavailable = (event) => {
+  //       audioChunksRef.current.push(event.data);
+  //     };
+
+  //     mediaRecorder.onstop = () => {
+  //       const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+  //       const file = new File([audioBlob], "recording.wav", { type: "audio/wav" });
+  //       setAudio(file);
+  //       setAudioName("Recorded audio (ready to transcribe)");
+  //     };
+
+  //     mediaRecorder.start();
+  //   } catch (error) {
+  //     console.error("Error starting recording:", error);
+  //   }
+  // };
+const startRecording = async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+
+    mediaRecorderRef.current = mediaRecorder;
+    audioChunksRef.current = [];
+    setRecording(true);
+    setAudioName("Recording in progress...");
+
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
         audioChunksRef.current.push(event.data);
-      };
+      }
+    };
 
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-        const file = new File([audioBlob], "recording.wav", { type: "audio/wav" });
-        setAudio(file);
-        setAudioName("Recorded audio (ready to transcribe)");
-      };
+    mediaRecorder.onstop = () => {
+      const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+      const file = new File([audioBlob], "recording.webm", { type: "audio/webm" });
+      setAudio(file);
+      setAudioName("Recorded audio (ready to transcribe)");
+    };
 
-      mediaRecorder.start();
-    } catch (error) {
-      console.error("Error starting recording:", error);
-    }
-  };
+    mediaRecorder.start();
+  } catch (error) {
+    console.error("Error starting recording:", error);
+  }
+};
 
   const stopRecording = () => {
     if (mediaRecorderRef.current) {
